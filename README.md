@@ -114,4 +114,15 @@ python -m pip install pytest && python -m pytest -q   # 11 pruebas
 
 ---
 
+## Guion sugerido para la sustentación (5 minutos)
+
+1. **Alertas:** pulsar *Ejecutar el sistema experto*. Mostrar el conteo por nivel de riesgo y la tabla ordenada por prioridad. Descargar el Excel.
+2. **Ficha del estudiante:** seleccionar una fila de riesgo alto. Leer "Por qué" y "Qué hacer".
+3. **Razonamiento:** abrir *Ver el razonamiento del sistema* → *¿Por qué riesgo alto?* (encadenamiento hacia atrás) → *Secuencia de inferencia* (reglas en espera y resolución de conflictos) → *Peso de cada variable*.
+4. **Probar un caso:** cargar *Asiste poco y perdió el laboratorio 1* (riesgo alto) y *Asiste poco, pero rinde bien* (la excepción R7 evita el riesgo alto).
+5. **Auditoría cruzada:** en la barra lateral desactivar *Excepción: asiste poco pero rinde bien* o subir el umbral de probabilidad a 80 % y volver a ejecutar.
+6. **Base de conocimiento:** las 15 reglas con su origen en la entrevista y las 4 que agregó el prototipo (vacíos revelados).
+
+---
+
 *Prototipo académico. No usar para decisiones reales sin datos institucionales, reentrenamiento y validación con docentes.*

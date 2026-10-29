@@ -60,7 +60,7 @@ flowchart TB
 
 | Componente | Responsabilidad | Implementación |
 |---|---|---|
-| Adaptador de ingesta (simulado) | Sustituye a Moodle y al sistema de notas. Genera 150–300 estudiantes ficticios con semilla fija y 1.200 registros históricos con resultado final. También acepta un CSV con el mismo esquema. | `se_alertas/ingesta_simulada.py` |
+| Adaptador de ingesta (simulado) | Sustituye a Moodle y al sistema de notas. Genera 150–300 estudiantes ficticios con una semilla fija (mismos datos para todos los evaluadores) y 1.200 registros históricos con resultado final. También acepta un CSV con el mismo esquema. | `se_alertas/ingesta_simulada.py` |
 | Ontología | Entidades, relaciones, taxonomía de riesgo y glosario. | `se_alertas/ontologia.py` |
 | Base de conocimiento | Reglas declarativas (hecho, operador, umbral) con certeza, origen en la entrevista, prioridad y fase. Umbrales editables. | `se_alertas/base_conocimiento.py` |
 | Modelo estadístico | Regresión logística (scikit-learn) entrenada con cohortes anteriores; devuelve P(reprobar) y el aporte de cada variable. | `se_alertas/modelo_estadistico.py` |
@@ -120,7 +120,7 @@ Procedimiento de intervención (pregunta 10): ROJO → tutoría individual antes
 
 * **Algoritmo:** regresión logística con estandarización de variables.
 * **Variables:** asistencia (ajustada), horas en Moodle, días sin ingresar, notas de laboratorios 1 y 2 (sin entregar = 0,0), puntaje de admisión en matemáticas, repite la materia, trabaja tiempo completo.
-* **Entrenamiento:** 1.200 estudiantes simulados de 6 cohortes (75 % entrenamiento / 25 % prueba). Con la semilla 2026: AUC ≈ 0,89, exactitud ≈ 82 %.
+* **Entrenamiento:** 1.200 estudiantes simulados de 6 cohortes (75 % entrenamiento / 25 % prueba). Con los datos simulados: AUC ≈ 0,89, exactitud ≈ 82 %.
 * **Por qué este modelo:** su salida ya es una probabilidad y sus coeficientes son interpretables; eso alimenta la explicación ("qué variables pesaron más").
 
 ## 5. Motor de inferencia
@@ -142,16 +142,22 @@ Ciclo *reconocer → resolver conflicto → actuar*:
 
 | Pestaña | Qué hace |
 |---|---|
-| 👥 Estudiantes | Lista de estudiantes simulados con todos sus hechos; filtro por curso. |
-| 🚦 Ejecutar y alertas | Botón *Ejecutar sistema experto*; conteo por color, gráfico por grupo, tabla ordenada por prioridad con justificación y acciones; exportación CSV y Excel. |
-| 🔍 Explicación | Por estudiante: semáforo, probabilidad, certeza, regla decisiva, narrativa, árbol ¿por qué? / ¿por qué no?, traza ciclo a ciclo (agenda incluida), aporte de cada variable del modelo y hechos iniciales vs. finales. |
-| 🧪 Consulta individual | Consulta básica con casos de la entrevista precargados (caso 0, preguntas 4, 5, 7 y 9) o valores libres. |
-| 📚 Base de conocimiento | Reglas en formato SI…ENTONCES, estrategia de control, métricas y coeficientes del modelo, ontología y glosario. |
-| 🏗️ Arquitectura | Diagrama de componentes y mapa a archivos. |
+| Alertas | Botón *Ejecutar el sistema experto*; conteo por nivel de riesgo con una franja de proporciones; tabla ordenada por prioridad con el motivo principal en lenguaje claro; al seleccionar una fila se abre la ficha del estudiante; exportación CSV y Excel. |
+| Estudiantes | Datos de entrada simulados (asistencia, Moodle, laboratorios, perfil) con filtro por curso. |
+| Probar un caso | Consulta básica con casos de la entrevista precargados o valores libres. |
+| Base de conocimiento | Reglas con nombre descriptivo y forma SI…ENTONCES, estrategia de control, modelo estadístico y ontología. |
+| Arquitectura | Diagrama de componentes y mapa a archivos. |
 
-**Barra lateral:** fuente de datos (simulada o CSV), semilla, número de estudiantes, umbrales del experto y activación de reglas. Desactivar una regla permite la auditoría cruzada.
+**Ficha del estudiante (módulo de explicación).** Dos niveles de lectura:
 
-Ejemplo de justificación en la tabla: `ROJO por R0 (asistencia 58 %, lab 1 1,8, Moodle 2,0 h/sem) + R1 (asistencia 58 %, lab 1 1,8) + R2 (P(reprobar) 87,0 %)` (caso 0 de la entrevista).
+* Para el docente: nivel de riesgo, probabilidad, cuatro indicadores clave, "Por qué" con motivos en lenguaje natural (sin códigos de regla) y "Qué hacer".
+* Para el evaluador, en el desplegable *Ver el razonamiento del sistema*: "¿por qué?" / "¿por qué no?" (encadenamiento hacia atrás) con cada condición evaluada, la secuencia de inferencia paso a paso con las reglas en espera, y el peso de cada variable del modelo.
+
+**Barra lateral:** origen de los datos (simulados o CSV), cantidad de estudiantes, umbrales del experto y reglas activas (por su descripción, agrupadas según el nivel de riesgo que concluyen). Desactivar una regla permite la auditoría cruzada.
+
+**Diseño visual:** sobrio, sin emojis, con una paleta de tres colores de riesgo (rojo ladrillo, ocre y verde) y texto mínimo; el detalle técnico queda plegado.
+
+Ejemplo de explicación para el docente (caso 0 de la entrevista): *Asiste al 58 % de las clases, obtuvo 1,8 en el laboratorio 1 y se conecta 2 horas por semana a Moodle. Comparado con estudiantes de semestres anteriores, su probabilidad de reprobar es muy alta (87 %).*
 
 ## 7. Herramienta elegida
 
