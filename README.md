@@ -114,15 +114,4 @@ python -m pip install pytest && python -m pytest -q   # 11 pruebas
 
 ---
 
-## Guion sugerido para la sustentación (5 minutos)
-
-1. **👥 Estudiantes:** 160 estudiantes ficticios llegan del "Moodle simulado" (corte semana 3).
-2. **🚦 Ejecutar y alertas:** pulsar *Ejecutar sistema experto*. Mostrar el conteo por color, el gráfico por grupo y la tabla ordenada por prioridad con su justificación. Descargar el Excel.
-3. **🔍 Explicación:** abrir un estudiante ROJO → *¿Por qué ROJO?* (encadenamiento hacia atrás) → *Traza* (agenda y resolución de conflictos ciclo a ciclo) → *Variables del modelo*.
-4. **🧪 Consulta individual:** cargar el *Caso 0 de la entrevista* (ROJO por R0, R1 y R2) y la *Pregunta 5* (la excepción R7 evita el ROJO).
-5. **Auditoría cruzada:** en la barra lateral desactivar R7 o subir el umbral de ROJO a 80 % y volver a ejecutar: se ve cómo cambia el semáforo.
-6. **📚 Base de conocimiento:** las 15 reglas con su origen en la entrevista y las 4 que agregó el prototipo (vacíos revelados).
-
----
-
 *Prototipo académico. No usar para decisiones reales sin datos institucionales, reentrenamiento y validación con docentes.*
