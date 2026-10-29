@@ -120,7 +120,7 @@ LAB1_BAJO = Condicion("nota_lab1", "<", "@nota_minima", "la nota del laboratorio
 REGLAS: tuple[Regla, ...] = (
     # ----------------------------- Fase 1: preparación de hechos -----------------------------
     Regla(
-        "P1", "Inicializar asistencia de trabajo",
+        "P1", "Tomar la asistencia registrada",
         (Condicion("asistencia_bruta", "existe", texto="se conoce la asistencia registrada"),),
         Conclusion("asignar", "tomar la asistencia registrada como asistencia de trabajo",
                    hecho="asistencia", valor="$asistencia_bruta"),
@@ -136,7 +136,7 @@ REGLAS: tuple[Regla, ...] = (
     ),
     # ----------------------------- Fase 2: modelo estadístico --------------------------------
     Regla(
-        "M1", "Calcular probabilidad con el modelo",
+        "M1", "Estimar la probabilidad con el historial",
         (Condicion("asistencia", "existe", texto="la asistencia de trabajo está disponible"),),
         Conclusion("modelo", "calcular la probabilidad de reprobar con el modelo entrenado con cohortes anteriores",
                    hecho="prob_reprobar"),
@@ -145,7 +145,7 @@ REGLAS: tuple[Regla, ...] = (
     ),
     # ----------------------------- Fase 3: clasificación (R0–R10) ----------------------------
     Regla(
-        "R0", "Patrón completo de riesgo alto",
+        "R0", "Baja asistencia, laboratorio 1 perdido y poca conexión",
         (ASIST_BAJA, LAB1_BAJO,
          Condicion("horas_moodle_semana", "<=", "@moodle_bajo", "hay {v} horas o menos de conexión a Moodle por semana")),
         Conclusion("candidato", "semáforo ROJO", valor="ROJO"),
@@ -153,21 +153,21 @@ REGLAS: tuple[Regla, ...] = (
         certeza="Alta", origen="Pregunta 1 (caso 0)", prioridad=60, veta_por_excepcion=True,
     ),
     Regla(
-        "R1", "Asistencia baja y laboratorio 1 perdido",
+        "R1", "Baja asistencia y laboratorio 1 perdido",
         (ASIST_BAJA, LAB1_BAJO),
         Conclusion("candidato", "riesgo ROJO", valor="ROJO"),
         accion="Citar a tutoría individual antes de la semana 4",
         certeza="Alta", origen="Pregunta 1", prioridad=55, veta_por_excepcion=True,
     ),
     Regla(
-        "R2", "Probabilidad crítica",
+        "R2", "Probabilidad de reprobar crítica",
         (Condicion("prob_reprobar", ">=", "@prob_rojo", "la probabilidad de reprobar es ≥ {v} %"),),
         Conclusion("candidato", "semáforo ROJO", valor="ROJO"),
         accion="Citar a tutoría individual",
         certeza="Alta", origen="Pregunta 12", prioridad=55, veta_por_excepcion=True,
     ),
     Regla(
-        "R3", "Zona de vigilancia con baja conexión",
+        "R3", "Riesgo moderado y poca conexión a Moodle",
         (Condicion("prob_reprobar", "entre", ("@prob_verde", "@prob_rojo"),
                    "la probabilidad de reprobar está entre {a} % y {b} %"),
          Condicion("horas_moodle_semana", "<", "@moodle_bajo", "la conexión a Moodle es < {v} horas/semana")),
@@ -176,7 +176,7 @@ REGLAS: tuple[Regla, ...] = (
         certeza="Alta", origen="Pregunta 6",
     ),
     Regla(
-        "R4", "Bien encaminado",
+        "R4", "Riesgo bajo y buena asistencia",
         (Condicion("prob_reprobar", "<", "@prob_verde", "la probabilidad de reprobar es < {v} %"),
          Condicion("asistencia", ">", "@asist_alta", "la asistencia es > {v} %")),
         Conclusion("candidato", "semáforo VERDE", valor="VERDE"),
@@ -184,14 +184,14 @@ REGLAS: tuple[Regla, ...] = (
         certeza="Alta", origen="Pregunta 3",
     ),
     Regla(
-        "R5", "Dificultad conceptual en memoria",
+        "R5", "Buena asistencia pero laboratorio 1 perdido",
         (Condicion("asistencia", ">=", "@asist_baja", "la asistencia es ≥ {v} %"), LAB1_BAJO),
         Conclusion("candidato", "semáforo AMARILLO", valor="AMARILLO"),
         accion="Refuerzo en punteros y memoria dinámica",
         certeza="Alta", origen="Pregunta 4",
     ),
     Regla(
-        "R7", "Excepción: posible causa externa",
+        "R7", "Excepción: asiste poco pero rinde bien",
         (ASIST_BAJA,
          Condicion("horas_moodle_semana", ">=", "@moodle_alto", "la conexión a Moodle es ≥ {v} horas/semana"),
          Condicion("nota_lab1", ">=", "@nota_buena", "la nota del laboratorio 1 es ≥ {v}")),
@@ -200,14 +200,14 @@ REGLAS: tuple[Regla, ...] = (
         certeza="Media", origen="Pregunta 5", prioridad=58,
     ),
     Regla(
-        "R9", "Repitente con asistencia irregular",
+        "R9", "Repite la materia y falta a clase",
         (Condicion("repite_materia", "==", True, "el estudiante repite la materia"),
          Condicion("asistencia", "<", "@asist_repitente", "la asistencia es < {v} %")),
         Conclusion("candidato", "semáforo AMARILLO", valor="AMARILLO"),
         certeza="Media", origen="Pregunta 8",
     ),
     Regla(
-        "R10", "Inactividad",
+        "R10", "Inactivo en Moodle o con laboratorios pendientes",
         (Condicion("dias_sin_ingreso_moodle", ">=", "@dias_inactividad", "hay {v} días o más sin ingreso a Moodle"),
          Condicion("labs_sin_entregar", ">=", 1, "hay un laboratorio sin entregar")),
         Conclusion("candidato", "semáforo AMARILLO", valor="AMARILLO"),
@@ -217,7 +217,7 @@ REGLAS: tuple[Regla, ...] = (
     ),
     # ----------------------------- Fase 4: escalamiento --------------------------------------
     Regla(
-        "R6", "Escalamiento por laboratorio 2",
+        "R6", "También perdió el laboratorio 2",
         (Condicion("semaforo_provisional", "==", "AMARILLO", "el semáforo es AMARILLO"),
          Condicion("nota_lab2", "<", "@nota_minima", "la nota del laboratorio 2 es < {v}")),
         Conclusion("candidato", "subir el semáforo a ROJO", valor="ROJO"),
@@ -226,7 +226,7 @@ REGLAS: tuple[Regla, ...] = (
     ),
     # ----------------------------- Fase 5: completitud (agregadas) ---------------------------
     Regla(
-        "R11", "Completitud: zona de vigilancia",
+        "R11", "Riesgo moderado sin otras señales",
         (Condicion("n_candidatos", "==", 0, "ninguna otra regla clasificó al estudiante"),
          Condicion("prob_reprobar", "entre", ("@prob_verde", "@prob_rojo"),
                    "la probabilidad de reprobar está entre {a} % y {b} %")),
@@ -236,7 +236,7 @@ REGLAS: tuple[Regla, ...] = (
         agregada_en_prototipo=True,
     ),
     Regla(
-        "R12", "Completitud: riesgo bajo",
+        "R12", "Riesgo bajo sin otras señales",
         (Condicion("n_candidatos", "==", 0, "ninguna otra regla clasificó al estudiante"),
          Condicion("prob_reprobar", "<", "@prob_verde", "la probabilidad de reprobar es < {v} %")),
         Conclusion("candidato", "semáforo VERDE", valor="VERDE"),

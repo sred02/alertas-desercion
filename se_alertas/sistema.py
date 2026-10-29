@@ -7,7 +7,7 @@ from typing import Iterable, Optional
 
 import pandas as pd
 
-from .explicacion import resumen_corto
+from .explicacion import motivo_principal, resumen_tecnico
 from .modelo_estadistico import ModeloRiesgo
 from .motor_inferencia import MotorInferencia, ResultadoInferencia
 
@@ -71,7 +71,8 @@ class SistemaExperto:
                     "accion": res.acciones[0],
                     "acciones_especificas": "; ".join(res.acciones[1:]),
                     "certeza": res.certeza,
-                    "justificacion": resumen_corto(res, self.motor),
+                    "motivo": motivo_principal(res, self.motor),
+                    "reglas_que_sostienen": resumen_tecnico(res, self.motor),
                 }
             )
         orden = {"ROJO": 0, "AMARILLO": 1, "VERDE": 2}

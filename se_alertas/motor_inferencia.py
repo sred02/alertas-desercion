@@ -157,6 +157,8 @@ class MotorInferencia:
                     continue
                 if r.accion.lower().startswith("seguimiento") and semaforo.accion_base.lower().startswith("seguimiento"):
                     continue
+                if "semana 4" in r.accion.lower() and "semana 4" in semaforo.accion_base.lower():
+                    continue
                 acciones.append(r.accion)
         return ResultadoInferencia(
             hechos_iniciales=dict(hechos),
