@@ -1,4 +1,4 @@
-# 🚦 Sistema Experto de Alertas Tempranas en Ciencias Básicas
+# Sistema Experto de Alertas Tempranas en Ciencias Básicas
 
 Prototipo web del proyecto **Alertas Deserción** (Sistemas Expertos ISOFBL143 · UNIMINUTO · 2026-2).
 
