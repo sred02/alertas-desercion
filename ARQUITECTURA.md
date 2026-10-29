@@ -167,19 +167,8 @@ Ejemplo de explicación para el docente (caso 0 de la entrevista): *Asiste al 58
 * Por eso se implementó un motor de producción propio y declarativo (unas 200 líneas) con los mismos conceptos de CLIPS/Experta: memoria de trabajo, agenda, *salience*, refracción y especificidad. Ventajas: sin dependencias frágiles, encadenamiento hacia atrás para explicar y traza completa.
 * **scikit-learn** para el modelo estadístico; **Streamlit** para la interfaz web y el despliegue gratuito con URL pública.
 
-## 8. Vacíos del diseño que reveló el prototipo (semana 11)
 
-| Vacío encontrado | Ajuste realizado |
-|---|---|
-| Con R0–R10 quedaban estudiantes sin color (P 40–69 % con Moodle ≥ 2 h; P < 40 % con asistencia ≤ 85 %). | Se agregaron R11 y R12 a partir del hecho 12 de la entrevista. Una prueba automática verifica que nadie quede sin clasificar. |
-| La hoja 2 decía "> 70 %" y la hoja 4 "≥ 70 %". | Se adoptó ≥ 70 % (pregunta 12 y Parte C). |
-| R6 usa "el semáforo es AMARILLO", que no es un dato de entrada. | Se definió el hecho derivado `semaforo_provisional`, que el motor recalcula en cada ciclo. |
-| R7 (no ROJO) chocaba con R2 (probabilidad ≥ 70 %). | R7 es una regla de excepción que anula los ROJO de R0/R1/R2, pero no el escalamiento de R6. |
-| R8 debía corregir la asistencia **antes** de usarla. | Fase Preparación con mayor prioridad que el modelo y las reglas de clasificación. |
-| ¿Qué pasa si un laboratorio no se entregó? | Las comparaciones numéricas no se cumplen sin dato; R10 lo atiende (AMARILLO) y el modelo lo trata como nota 0,0. |
-| Experta no funciona en Python moderno. | Motor propio (sección 7). |
-
-## 9. Alcance y limitaciones
+## 8. Alcance y limitaciones
 
 * No reemplaza el criterio del docente, no asigna notas ni sanciones y no diagnostica causas personales o psicológicas.
 * Los datos son **ficticios**: el desempeño del modelo (AUC) solo demuestra que el flujo funciona; con datos reales habría que reentrenar y recalibrar.
@@ -187,14 +176,4 @@ Ejemplo de explicación para el docente (caso 0 de la entrevista): *Asiste al 58
 * Riesgo de sesgo si se agregan variables socioeconómicas; la alerta orienta apoyo, nunca excluye.
 * Próxima unidad: reemplazar la certeza cualitativa (Alta/Media) por **factores de certeza** numéricos.
 
-## 10. Correspondencia con la rúbrica del RAC 2
 
-| Criterio | Dónde se evidencia |
-|---|---|
-| Coherencia de la arquitectura | Secciones 2, 3 y 5; pestaña Arquitectura. |
-| Representación del conocimiento | Sección 4; pestaña Base de conocimiento; `base_conocimiento.py`. |
-| Tipo de inferencia | Sección 5; pestaña Explicación → Traza y ¿Por qué?. |
-| Interfaz y explicaciones | Sección 6; toda la app. |
-| Herramienta elegida | Sección 7. |
-| Prototipo | URL pública en Streamlit Community Cloud; 15 reglas (más que las 5 reglas base pedidas); pruebas en `tests/`. |
-| Adecuación al dominio | Umbrales y casos tomados de la entrevista al experto. |
