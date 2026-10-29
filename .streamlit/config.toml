@@ -1,9 +1,22 @@
 [theme]
-primaryColor = "#D64545"
 base = "light"
+primaryColor = "#2B5D7A"
+backgroundColor = "#F5F6F3"
+secondaryBackgroundColor = "#EBEEEA"
+textColor = "#1E2A32"
+borderColor = "#DCE1DD"
+font = "IBM Plex Sans:https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+baseRadius = "0.4rem"
+showWidgetBorder = true
+
+[theme.sidebar]
+backgroundColor = "#EBEEEA"
 
 [server]
 headless = true
 
 [browser]
 gatherUsageStats = false
+
+[client]
+toolbarMode = "viewer"
