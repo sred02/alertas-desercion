@@ -4,7 +4,7 @@
 **Equipo:** Daniel Andrei Londoño Barrera · Sarai Sredny López Robles
 **Proyecto:** Alertas Deserción — cursos de Programación en C++ y Estructuras de Datos
 
-> Fuentes de este diseño: `Plantilla_Arquitectura_Sistemas_Expertos.xlsx` (hoja 2), `Plantilla_Entrevista_al_Experto 1.xlsx` (hojas 2–5), `ISOFBL143_Clasifica_y_Elige` (Parte C) y las guías de las semanas 10, 11 y 12.
+
 
 ---
 
